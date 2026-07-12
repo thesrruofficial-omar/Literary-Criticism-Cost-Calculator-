@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>حاسبة تكلفة العمل</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: #0f172a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    font-family: Tahoma, 'Segoe UI', system-ui, -apple-system, sans-serif;
+  }
+  .card {
+    width: 100%;
+    max-width: 380px;
+    background-color: #1e293b;
+    border-radius: 20px;
+    padding: 28px 24px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+    border: 1px solid #334155;
+  }
+  h1 {
+    color: #f1f5f9;
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 0 4px 0;
+    text-align: center;
+  }
+  .subtitle {
+    color: #94a3b8;
+    font-size: 13px;
+    text-align: center;
+    margin: 0 0 24px 0;
+  }
+  .service-note {
+    color: #d97757;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.6;
+    margin: 0 0 16px 0;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #334155;
+  }
+  label {
+    display: block;
+    color: #cbd5e1;
+    font-size: 13px;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  input, select {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid #334155;
+    background-color: #0f172a;
+    color: #f1f5f9;
+    font-size: 15px;
+    margin-bottom: 18px;
+    outline: none;
+    font-family: inherit;
+  }
+  input:focus, select:focus {
+    border-color: #d97757;
+  }
+  select {
+    margin-bottom: 22px;
+  }
+  button {
+    width: 100%;
+    padding: 13px;
+    border-radius: 10px;
+    border: none;
+    background-color: #d97757;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  button:hover {
+    background-color: #c86a4c;
+  }
+  .error {
+    color: #f87171;
+    font-size: 13px;
+    margin-top: 16px;
+    text-align: center;
+    display: none;
+  }
+  .result-box {
+    margin-top: 20px;
+    padding: 18px;
+    border-radius: 12px;
+    background-color: #0f172a;
+    border: 1px solid #334155;
+    text-align: center;
+    display: none;
+  }
+  .result-label {
+    color: #94a3b8;
+    font-size: 12px;
+    margin: 0;
+  }
+  .result-value {
+    color: #4ade80;
+    font-size: 28px;
+    font-weight: 800;
+    margin: 4px 0 0 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <p class="service-note">هذه الحاسبة لتكاليف خدمة القراءة والتحليل النقدي بالإضافة إلى جلسة نقاشية عبر اتصال صوتي مدتها ساعة</p>
+  <h1>حاسبة تكلفة العمل</h1>
+  <p class="subtitle">احسب الإجمالي بناءً على عدد الكلمات وطريقة الدفع</p>
+
+  <label for="wordCount">عدد الكلمات</label>
+  <input type="number" id="wordCount" placeholder="مثال: 35000" />
+
+  <label for="paymentMethod">طريقة الدفع</label>
+  <select id="paymentMethod">
+    <option value="paypal">PayPal</option>
+    <option value="western_union">Western Union</option>
+    <option value="jordan_wallet">محفظة إلكترونية أردنية</option>
+  </select>
+
+  <button onclick="calculate()">احسب الإجمالي</button>
+
+  <p class="error" id="errorText">يرجى إدخال عدد كلمات صحيح</p>
+
+  <div class="result-box" id="resultBox">
+    <p class="result-label">الإجمالي المطلوب</p>
+    <p class="result-value" id="resultValue">$0.00</p>
+  </div>
+</div>
+
+<script>
+  function calculate() {
+    const wordCountInput = document.getElementById('wordCount').value;
+    const paymentMethod = document.getElementById('paymentMethod').value;
+    const errorText = document.getElementById('errorText');
+    const resultBox = document.getElementById('resultBox');
+    const resultValue = document.getElementById('resultValue');
+
+    const words = Number(wordCountInput);
+
+    if (wordCountInput === '' || isNaN(words) || words < 0) {
+      errorText.style.display = 'block';
+      resultBox.style.display = 'none';
+      return;
+    }
+
+    errorText.style.display = 'none';
+
+    let initialCost;
+    if (words <= 30000) {
+      initialCost = 75;
+    } else {
+      const extraWords = words - 30000;
+      const unitsOf10 = Math.ceil(extraWords / 10);
+      const extraCost = unitsOf10 * 0.025;
+      initialCost = 75 + extraCost;
+    }
+
+    let finalTotal;
+    if (paymentMethod === 'paypal') {
+      finalTotal = initialCost + (initialCost * 0.04);
+    } else if (paymentMethod === 'western_union') {
+      finalTotal = initialCost + 10;
+    } else {
+      finalTotal = initialCost;
+    }
+
+    resultValue.textContent = '$' + finalTotal.toFixed(2);
+    resultBox.style.display = 'block';
+  }
+</script>
+
+</body>
+</html>
