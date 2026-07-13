@@ -210,7 +210,21 @@
 
   <!-- ======================= حاسبة 1: القراءة والتحليل النقدي ======================= -->
   <div class="view" id="view-reading">
-    <button class="back-btn" onclick="showView('menu')">⬅️ العودة للخدمات الرئيسية</button>
+    <!-- حاوية أزرار التحكم العلوي البديلة للزر القديم -->
+<div class="top-controls" style="display: flex; gap: 10px; margin-bottom: 20px;">
+    
+    <!-- زر العودة المطور والأكثر وضوحاً -->
+    <button class="back-btn" onclick="showView('menu')" style="flex: 1; padding: 12px; background: #222d3f; border: 1px solid #3b4b61; color: #fff; border-radius: 8px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px;">
+        <span style="font-size: 18px;">←</span> العودة للخدمات الرئيسية
+    </button>
+    
+    <!-- زر التفاصيل المربع الصغير -->
+    <button class="info-btn" onclick="openDetailsModal()" style="width: 48px; height: 48px; background: #222d3f; border: 1px solid #3b4b61; color: #ff8a65; border-radius: 8px; cursor: pointer; font-size: 20px; font-weight: bold; display: flex; align-items: center; justify-content: center;">
+        ℹ️
+    </button>
+    
+</div>
+
     <p class="service-note">هذه الحاسبة لتكاليف خدمة القراءة والتحليل النقدي بالإضافة إلى جلسة نقاشية عبر اتصال صوتي مدتها ساعة</p>
     <h1>حاسبة تكلفة العمل</h1>
     <p class="subtitle">احسب الإجمالي بناءً على عدد الكلمات وطريقة الدفع</p>
