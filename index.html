@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>حاسبة تكلفة العمل</title>
+<title>حاسبة الخدمات الأدبية والأسلوبية</title>
 <style>
   * { box-sizing: border-box; }
   body {
@@ -18,7 +18,7 @@
   }
   .card {
     width: 100%;
-    max-width: 380px;
+    max-width: 420px;
     background-color: #1e293b;
     border-radius: 20px;
     padding: 28px 24px;
@@ -27,7 +27,7 @@
   }
   h1 {
     color: #f1f5f9;
-    font-size: 20px;
+    font-size: 21px;
     font-weight: 700;
     margin: 0 0 4px 0;
     text-align: center;
@@ -111,6 +111,435 @@
   }
   .result-value {
     color: #4ade80;
+    font-size: 28px;
+    font-weight: 800;
+    margin: 4px 0 0 0;
+  }
+
+  /* Dashboard / navigation styles */
+  .menu-subtitle {
+    color: #94a3b8;
+    font-size: 13px;
+    text-align: center;
+    margin: 0 0 26px 0;
+  }
+  .menu-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .menu-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    text-align: right;
+    padding: 16px 18px;
+    border-radius: 14px;
+    border: 1px solid #334155;
+    background-color: #0f172a;
+    color: #f1f5f9;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.1s ease;
+  }
+  .menu-btn .icon {
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .menu-btn:hover {
+    border-color: #d97757;
+    background-color: #16213a;
+    transform: translateY(-1px);
+  }
+  .back-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    border: 1px solid #334155;
+    background-color: transparent;
+    color: #cbd5e1;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .back-btn:hover {
+    border-color: #d97757;
+    color: #d97757;
+    background-color: transparent;
+  }
+  .view {
+    display: none;
+  }
+  .view.active {
+    display: block;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+
+  <!-- ======================= لوحة التحكم الرئيسية ======================= -->
+  <div class="view active" id="view-menu">
+    <h1>حاسبة الخدمات الأدبية والأسلوبية</h1>
+    <p class="menu-subtitle">اختر نوع الخدمة لحساب التكلفة</p>
+    <div class="menu-grid">
+      <button class="menu-btn" onclick="showView('reading')">
+        <span class="icon">🖋️</span>
+        <span>حاسبة القراءة والتحليل النقدي (بالكلمات)</span>
+      </button>
+      <button class="menu-btn" onclick="showView('sessions')">
+        <span class="icon">🎙️</span>
+        <span>حاسبة الجلسات الإرشادية والتوجيه (بالساعات)</span>
+      </button>
+      <button class="menu-btn" onclick="showView('rewriting')">
+        <span class="icon">🔄</span>
+        <span>حاسبة إعادة الصياغة والتطوير الأسلوبي (بالصفحات)</span>
+      </button>
+      <button class="menu-btn" onclick="showView('novel')">
+        <span class="icon">👥</span>
+        <span>حاسبة كتابة الروايات - كاتب الظل (بالصفحات)</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ======================= حاسبة 1: القراءة والتحليل النقدي ======================= -->
+  <div class="view" id="view-reading">
+    <button class="back-btn" onclick="showView('menu')">⬅️ العودة للخدمات الرئيسية</button>
+    <p class="service-note">هذه الحاسبة لتكاليف خدمة القراءة والتحليل النقدي بالإضافة إلى جلسة نقاشية عبر اتصال صوتي مدتها ساعة</p>
+    <h1>حاسبة تكلفة العمل</h1>
+    <p class="subtitle">احسب الإجمالي بناءً على عدد الكلمات وطريقة الدفع</p>
+
+    <label for="wordCount">عدد الكلمات</label>
+    <input type="number" id="wordCount" placeholder="مثال: 35000" min="0" />
+
+    <label for="paymentMethod-reading">طريقة الدفع</label>
+    <select id="paymentMethod-reading">
+      <option value="paypal">PayPal</option>
+      <option value="western_union">Western Union</option>
+      <option value="jordan_wallet">محفظة إلكترونية أردنية</option>
+    </select>
+
+    <button onclick="calculateReading()">احسب الإجمالي</button>
+
+    <p class="error" id="error-reading">يرجى إدخال عدد كلمات صحيح</p>
+
+    <div class="result-box" id="result-reading">
+      <p class="result-label">الإجمالي المطلوب</p>
+      <p class="result-value" id="resultValue-reading">$0.00</p>
+    </div>
+  </div>
+
+  <!-- ======================= حاسبة 2: الجلسات الإرشادية ======================= -->
+  <div class="view" id="view-sessions">
+    <button class="back-btn" onclick="showView('menu')">⬅️ العودة للخدمات الرئيسية</button>
+    <p class="service-note">(هذه الحاسبة لحسابة تكاليف خدمة الجلسات النقاشية والعصف الذهني والإشراف عبر اتصال صوتي.)</p>
+    <h1>حاسبة تكلفة العمل</h1>
+    <p class="subtitle">احسب الإجمالي بناءً على عدد الساعات وطريقة الدفع</p>
+
+    <label for="hoursCount">عدد الساعات</label>
+    <input type="number" id="hoursCount" placeholder="مثال: 3" min="0" step="0.5" />
+
+    <label for="paymentMethod-sessions">طريقة الدفع</label>
+    <select id="paymentMethod-sessions">
+      <option value="paypal">PayPal</option>
+      <option value="western_union">Western Union</option>
+      <option value="jordan_wallet">محفظة إلكترونية أردنية</option>
+    </select>
+
+    <button onclick="calculateSessions()">احسب الإجمالي</button>
+
+    <p class="error" id="error-sessions">يرجى إدخال عدد ساعات صحيح</p>
+
+    <div class="result-box" id="result-sessions">
+      <p class="result-label">الإجمالي المطلوب</p>
+      <p class="result-value" id="resultValue-sessions">$0.00</p>
+    </div>
+  </div>
+
+  <!-- ======================= حاسبة 3: إعادة الصياغة ======================= -->
+  <div class="view" id="view-rewriting">
+    <button class="back-btn" onclick="showView('menu')">⬅️ العودة للخدمات الرئيسية</button>
+    <p class="service-note">(هذه الحاسبة لحساب تكلفة خدمة إعادة صياغة النصوص وتطويرها أسلوبياً.)</p>
+    <h1>حاسبة تكلفة إعادة الصياغة</h1>
+    <p class="subtitle">احسب الإجمالي بناءً على عدد الصفحات ونوع النص وطريقة الدفع</p>
+
+    <label for="pagesCount-rewriting">عدد الصفحات</label>
+    <input type="number" id="pagesCount-rewriting" placeholder="مثال: 5" min="1" step="1" />
+
+    <label for="textType">نوع النص</label>
+    <select id="textType">
+      <option value="ai">إعادة صياغة نصوص ذكاء اصطناعي</option>
+      <option value="weak">إعادة صياغة نصوص ركيكة</option>
+      <option value="slang">إعادة صياغة نصوص عامية</option>
+    </select>
+
+    <label for="paymentMethod-rewriting">طريقة الدفع</label>
+    <select id="paymentMethod-rewriting">
+      <option value="paypal">PayPal</option>
+      <option value="western_union">Western Union</option>
+      <option value="jordan_wallet">محفظة إلكترونية أردنية</option>
+    </select>
+
+    <button onclick="calculateRewriting()">احسب الإجمالي</button>
+
+    <p class="error" id="error-rewriting">يرجى إدخال عدد صفحات صحيح (1 أو أكثر)</p>
+
+    <div class="result-box" id="result-rewriting">
+      <p class="result-label">الإجمالي المطلوب</p>
+      <p class="result-value" id="resultValue-rewriting">$0.00</p>
+    </div>
+  </div>
+
+  <!-- ======================= حاسبة 4: كتابة الروايات (كاتب الظل) ======================= -->
+  <div class="view" id="view-novel">
+    <button class="back-btn" onclick="showView('menu')">⬅️ العودة للخدمات الرئيسية</button>
+    <p class="service-note">(هذه الحاسبة لحساب تكلفة خدمة كتابة الروايات وصياغتها ككاتب ظل احترافي.)</p>
+    <h1>حاسبة تكلفة كتابة الروايات</h1>
+    <p class="subtitle">احسب الإجمالي بناءً على عدد الصفحات ومرحلة جاهزية الفكرة وطريقة الدفع</p>
+
+    <label for="pagesCount-novel">عدد الصفحات</label>
+    <input type="number" id="pagesCount-novel" placeholder="مثال: 10" min="1" step="1" />
+
+    <label for="ideaStage">مرحلة العمل (جاهزية الفكرة)</label>
+    <select id="ideaStage">
+      <option value="idea_plot">لدي الفكرة والحبكة</option>
+      <option value="idea_only">لدي الفكرة</option>
+      <option value="from_scratch">أريد رواية من الصفر</option>
+    </select>
+
+    <label for="paymentMethod-novel">طريقة الدفع</label>
+    <select id="paymentMethod-novel">
+      <option value="paypal">PayPal</option>
+      <option value="western_union">Western Union</option>
+      <option value="jordan_wallet">محفظة إلكترونية أردنية</option>
+    </select>
+
+    <button onclick="calculateNovel()">احسب الإجمالي</button>
+
+    <p class="error" id="error-novel">يرجى إدخال عدد صفحات صحيح (1 أو أكثر)</p>
+
+    <div class="result-box" id="result-novel">
+      <p class="result-label">الإجمالي المطلوب</p>
+      <p class="result-value" id="resultValue-novel">$0.00</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  /* ===================== أدوات مشتركة ===================== */
+
+  // تطبيق عمولة/رسوم طريقة الدفع على أي تكلفة أولية
+  function applyPaymentMethod(initialCost, paymentMethod) {
+    if (paymentMethod === 'paypal') {
+      return initialCost + (initialCost * 0.04);
+    } else if (paymentMethod === 'western_union') {
+      return initialCost + 10;
+    }
+    return initialCost; // المحفظة الأردنية: بدون عمولة
+  }
+
+  // كل الشاشات المتاحة للتنقل بينها
+  const VIEWS = ['menu', 'reading', 'sessions', 'rewriting', 'novel'];
+
+  // تصفير حقول ونتائج شاشة معينة
+  function resetView(viewName) {
+    const resetMap = {
+      reading: {
+        inputs: ['wordCount'],
+        selects: ['paymentMethod-reading'],
+        error: 'error-reading',
+        result: 'result-reading'
+      },
+      sessions: {
+        inputs: ['hoursCount'],
+        selects: ['paymentMethod-sessions'],
+        error: 'error-sessions',
+        result: 'result-sessions'
+      },
+      rewriting: {
+        inputs: ['pagesCount-rewriting'],
+        selects: ['textType', 'paymentMethod-rewriting'],
+        error: 'error-rewriting',
+        result: 'result-rewriting'
+      },
+      novel: {
+        inputs: ['pagesCount-novel'],
+        selects: ['ideaStage', 'paymentMethod-novel'],
+        error: 'error-novel',
+        result: 'result-novel'
+      }
+    };
+
+    const config = resetMap[viewName];
+    if (!config) return; // لا يوجد شيء لتصفيره في شاشة القائمة الرئيسية
+
+    config.inputs.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    config.selects.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.selectedIndex = 0;
+    });
+    const errorEl = document.getElementById(config.error);
+    if (errorEl) errorEl.style.display = 'none';
+    const resultEl = document.getElementById(config.result);
+    if (resultEl) resultEl.style.display = 'none';
+  }
+
+  // إظهار شاشة معينة وإخفاء البقية، مع تصفير كل الشاشات الأخرى تلقائياً
+  function showView(viewName) {
+    VIEWS.forEach(name => {
+      const el = document.getElementById('view-' + name);
+      if (!el) return;
+      if (name === viewName) {
+        el.classList.add('active');
+      } else {
+        el.classList.remove('active');
+        resetView(name); // تصفير أي شاشة حاسبة يتم مغادرتها
+      }
+    });
+  }
+
+  /* ===================== الحاسبة 1: القراءة والتحليل النقدي ===================== */
+  function calculateReading() {
+    const wordCountInput = document.getElementById('wordCount').value;
+    const paymentMethod = document.getElementById('paymentMethod-reading').value;
+    const errorText = document.getElementById('error-reading');
+    const resultBox = document.getElementById('result-reading');
+    const resultValue = document.getElementById('resultValue-reading');
+
+    const words = Number(wordCountInput);
+
+    if (wordCountInput === '' || isNaN(words) || words < 0) {
+      errorText.style.display = 'block';
+      resultBox.style.display = 'none';
+      return;
+    }
+    errorText.style.display = 'none';
+
+    let initialCost;
+    if (words <= 30000) {
+      initialCost = 75;
+    } else {
+      const extraWords = words - 30000;
+      const unitsOf10 = Math.ceil(extraWords / 10);
+      const extraCost = unitsOf10 * 0.025;
+      initialCost = 75 + extraCost;
+    }
+
+    const finalTotal = applyPaymentMethod(initialCost, paymentMethod);
+    resultValue.textContent = '$' + finalTotal.toFixed(2);
+    resultBox.style.display = 'block';
+  }
+
+  /* ===================== الحاسبة 2: الجلسات الإرشادية ===================== */
+  const HOURLY_RATE = 25;
+
+  function calculateSessions() {
+    const hoursInput = document.getElementById('hoursCount').value;
+    const paymentMethod = document.getElementById('paymentMethod-sessions').value;
+    const errorText = document.getElementById('error-sessions');
+    const resultBox = document.getElementById('result-sessions');
+    const resultValue = document.getElementById('resultValue-sessions');
+
+    const hours = Number(hoursInput);
+
+    if (hoursInput === '' || isNaN(hours) || hours < 0) {
+      errorText.style.display = 'block';
+      resultBox.style.display = 'none';
+      return;
+    }
+    errorText.style.display = 'none';
+
+    const initialCost = hours * HOURLY_RATE;
+    const finalTotal = applyPaymentMethod(initialCost, paymentMethod);
+    resultValue.textContent = '$' + finalTotal.toFixed(2);
+    resultBox.style.display = 'block';
+  }
+
+  /* ===================== الحاسبة 3: إعادة الصياغة ===================== */
+  const REWRITING_FIRST_PAGE_PRICE = 50;
+  const REWRITING_EXTRA_PAGE_RATES = {
+    ai: 7,
+    weak: 8,
+    slang: 9
+  };
+
+  function calculateRewriting() {
+    const pagesInput = document.getElementById('pagesCount-rewriting').value;
+    const textType = document.getElementById('textType').value;
+    const paymentMethod = document.getElementById('paymentMethod-rewriting').value;
+    const errorText = document.getElementById('error-rewriting');
+    const resultBox = document.getElementById('result-rewriting');
+    const resultValue = document.getElementById('resultValue-rewriting');
+
+    const pages = Number(pagesInput);
+
+    if (pagesInput === '' || isNaN(pages) || pages < 1) {
+      errorText.style.display = 'block';
+      resultBox.style.display = 'none';
+      return;
+    }
+    errorText.style.display = 'none';
+
+    const extraPages = pages - 1;
+    const extraRate = REWRITING_EXTRA_PAGE_RATES[textType];
+    const initialCost = REWRITING_FIRST_PAGE_PRICE + (extraPages * extraRate);
+
+    const finalTotal = applyPaymentMethod(initialCost, paymentMethod);
+    resultValue.textContent = '$' + finalTotal.toFixed(2);
+    resultBox.style.display = 'block';
+  }
+
+  /* ===================== الحاسبة 4: كتابة الروايات (كاتب الظل) ===================== */
+  const NOVEL_FIRST_PAGE_PRICE = 50;
+  const NOVEL_EXTRA_PAGE_RATES = {
+    idea_plot: 15,
+    idea_only: 17,
+    from_scratch: 20
+  };
+
+  function calculateNovel() {
+    const pagesInput = document.getElementById('pagesCount-novel').value;
+    const ideaStage = document.getElementById('ideaStage').value;
+    const paymentMethod = document.getElementById('paymentMethod-novel').value;
+    const errorText = document.getElementById('error-novel');
+    const resultBox = document.getElementById('result-novel');
+    const resultValue = document.getElementById('resultValue-novel');
+
+    const pages = Number(pagesInput);
+
+    if (pagesInput === '' || isNaN(pages) || pages < 1) {
+      errorText.style.display = 'block';
+      resultBox.style.display = 'none';
+      return;
+    }
+    errorText.style.display = 'none';
+
+    const extraPages = pages - 1;
+    const extraRate = NOVEL_EXTRA_PAGE_RATES[ideaStage];
+    const initialCost = NOVEL_FIRST_PAGE_PRICE + (extraPages * extraRate);
+
+    const finalTotal = applyPaymentMethod(initialCost, paymentMethod);
+    resultValue.textContent = '$' + finalTotal.toFixed(2);
+    resultBox.style.display = 'block';
+  }
+</script>
+
+</body>
+</html>    color: #4ade80;
     font-size: 28px;
     font-weight: 800;
     margin: 4px 0 0 0;
